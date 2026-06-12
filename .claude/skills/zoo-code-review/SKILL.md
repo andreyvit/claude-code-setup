@@ -27,6 +27,9 @@ Read and follow `.zoo/coding.md`, `.zoo/testing.md` and `.zoo/codereview.md` if 
 ## What To Check
 
 - Verify the original user request or ticket's primary use case is actually satisfied. Do not approve a plan limitation or partial implementation that skips the main point.
+- Flag diffs that should have been split into separate subtasks or commits. If a larger set of changes could plausibly stand on its own and has observable testable output, ask for separate routing instead of approving a broad catch-all changeset.
+- Flag significant scope expansion implemented without a proposal and recorded user approval. Non-blocking expansion should remain a proposal for later user review instead of becoming a current-task blocker.
+- Significant scope expansion includes new jobs, persisted state or migrations, new settings, public/API contract changes, broad subsystem behavior changes, operational dashboards/recovery mechanisms, and other work a user would not naturally expect from the direct ask.
 - Flag semantic duplication: new enum values, constants, helpers, APIs, or UI mechanisms that do the same job as an existing mechanism under a different name.
 - Challenge workarounds around first-party code, including shared code considered first-party, if any. Require concrete evidence that fixing the shared dependency is riskier than carrying a workaround.
 - Review for simplicity and maintainability: unnecessary layers, duplicated setup, ignored existing helpers, wrong test file/package placement, and comments that are symptoms of unclear structure.

@@ -8,6 +8,8 @@
 
 ## Architecture
 
+- Production is single-process and single-active-node. `bh301` is standby and its database is overwritten from the primary every few hours; do not model normal deploys as active-active or as old/new workers concurrently consuming the same production job queue.
+- Job workers are goroutines in the active process. Deployment plans should reason about single-process restart, pending jobs, durable data compatibility, external callbacks, rollback, failover, and rebuild paths; only include multi-node mixed-version analysis when the task explicitly involves failover or confirmed concurrent serving.
 - First-party dependencies under `github.com/andreyvit/*` are editable when all call sites are updated; repo/path source of truth is `automation/deps/deps.go`.
 - Local dependency iteration: `go run ./cmd/fireman deps-replace` and `go run ./cmd/fireman deps-dropreplace`.
 - `bm/` and `bm/m*/` must not use `fire.Context`; `fdb/` may.
@@ -26,6 +28,7 @@
 - API docs content lives in `apidocs/`; viewer code lives in `apidocviewer/`; validate with `make apidocs`; preview with `go run ./cmd/firedocs`.
 - Internal technical docs go in `_ai/`; user manual content goes in `_readme/manual/`.
 - API docs should prefer "coupons" or "coupon codes" over "discount codes".
+- If a setting must default to an insane / undesirably inconsistent value to maintain compatibility, but we'd like to move new stores to a saner default in the future; or if adding a behavior that defaults off but should default on in the future; or in similar situations -- add it to .proposals/FUTURE-ROLLOUT.md so that we don't forget.
 
 ## Domain-Specific Planning
 

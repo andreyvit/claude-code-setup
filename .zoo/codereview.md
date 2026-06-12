@@ -5,6 +5,7 @@
 - Backoffice shared code belongs in `fire/business/backofficecommons/`; feature code belongs in `fire/business/backoffice/bo*/`.
 - For fireback extraction, verify `*RC` became `fire.Context`, unnecessary app parameters were removed, and `ApplyPageLayout` became `ApplyPageLayout: true`.
 - Challenge workarounds around `github.com/andreyvit/*` and `github.com/prairiegroupinc/*`; check whether the first-party dependency should have been fixed instead.
+- All JavaScript package dependencies in `package.json` files must use exact versions, never semver ranges like `^`, `~`, `x`, `latest`, or inequality ranges. Upgrade any JS package only through an explicit reviewed dependency change, and keep the lockfile root spec in sync with the exact version.
 
 ## Data and Settings
 
@@ -28,6 +29,6 @@
 - Tests should live beside the relevant package; `fire/integrationtests/` is only for full-stack HTTP handler cross-feature tests.
 - Backoffice page tests must use `ta.Invoke`.
 - Tests should not load broad copied production configs from `fire/integrationtests/rendertests/testdata/*.json`; encode relevant fields through `Configure`/`ConfigureTenant`.
-- Validation should include `make fmt`, package-level `go test ./path/...`, and `make quicktest` before commit.
+- Validation should include `make fmt`, package-level `go test ./path/...`, `make quicktest`, and `make uitest` before commit. `make quicktest` and `make uitest` may run in parallel. `make uitest` requires `cd uitests && npm install` once after a fresh checkout.
 - API docs belong in `apidocs/` and validate with `make apidocs`.
 - Migration IDs must come from `curl https://app.bubblehouse.com/superadmin/x/newid/`.

@@ -17,6 +17,7 @@ Read and follow `.zoo/testing.md` if it exists.
 
 - Prefer failing-first tests and verify the failure reason matches intent.
 - Keep test scope focused on the active `(next)` subtask.
+- Do not write tests that force unapproved scope expansion. If the natural test exposes significant expansion outside the direct ask, use `zoo-refactoring` and the proposal-first route before encoding that broader behavior as current-task acceptance.
 - Write one test at a time: make it compile, run it, verify it fails for the intended reason, and only then add another test when needed.
 - Choose the correct package before writing.
 - Use `zoo-refactoring` when test work exposes a need to change pre-existing code outside the active subtask. It routes consequential cross-cutting changes to proposals, broad mundane refactors to separate subtasks/commits, and small low-pollution edits into the current task.

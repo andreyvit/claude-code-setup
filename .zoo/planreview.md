@@ -13,7 +13,7 @@
 - Backoffice plans should mention `bonav.Define()` route/nav registration or document why direct route registration is needed.
 - Tests should read `_readme/tests-and-helpers.md`, live beside the relevant package, and reserve `fire/integrationtests/` for full-stack HTTP handler cross-feature tests.
 - Backoffice page tests should use `ta.Invoke`; direct handler calls do not render HTML.
-- Validation should include `make fmt`, full package-level `go test ./path/...` without `-short`/`-vet=off`, and `make quicktest` before commit.
+- Validation should include `make fmt`, full package-level `go test ./path/...` without `-short`/`-vet=off`, `make quicktest`, and `make uitest` before commit. `make quicktest` and `make uitest` may run in parallel. `make uitest` requires `cd uitests && npm install` once after a fresh checkout.
 - Production config references should be encoded narrowly through `Configure`/`ConfigureTenant`, not loaded wholesale from copied JSON.
 - API docs should live in `apidocs/` and validate with `make apidocs`.
 - Migration IDs should come from `curl https://app.bubblehouse.com/superadmin/x/newid/`.

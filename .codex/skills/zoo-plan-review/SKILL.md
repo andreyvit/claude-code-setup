@@ -24,6 +24,10 @@ Read and follow `.zoo/planning.md` and `.zoo/planreview.md` if exists.
 ## Substantive Checks
 
 - Verify the plan addresses the original user request or ticket's primary use case. A limitation that skips the main point must be revised or explicitly decided by the user.
+- Flag broad active subtasks that would be hard to review as one commit. More subtasks is better than fewer when each slice has observable testable output; require splits for larger sets of files or behaviors that can plausibly stand alone.
+- Reject active plans that bury the direct ask inside broader discovered work. The first implementation slice should satisfy the user's requested outcome with only the technically required support work.
+- Before approving significant scope expansion, verify a proposal exists and explicit user approval is recorded in `User Input` or `Decision log`. Without approval, require the proposal-first route: if blocking, ask the user through the user-interview or Ask User path after the proposal is written; if non-blocking, leave the proposal deferred while the primary scope continues.
+- Significant scope expansion includes new jobs, persisted state or migrations, new settings, public/API contract changes, broad subsystem behavior changes, operational dashboards/recovery mechanisms, and other work a user would not naturally expect from the direct ask.
 - Verify the plan uses relevant execution memory, completed-subtask learnings, research reports, and existing code patterns.
 - Require an execution trace for behavior changes: entry points, key conditions, and dependent code paths.
 - Require pattern discovery before new mechanisms. Flag new enum values, APIs, helpers, UI mechanisms, or transient model fields that duplicate an existing mechanism.

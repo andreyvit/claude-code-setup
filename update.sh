@@ -82,19 +82,36 @@ sync_optional_dir() {
   fi
 }
 
-sync_optional_zoo_skills() {
+sync_optional_project_skills() {
   local source_skills_dir="$1"
   local target_skills_dir="$2"
+  local managed_skill_names=(lighto)
+  local managed_skill_prefixes=(zoo lighto)
+  local name
+  local prefix
+  local skill
 
   if [[ -d "$target_skills_dir" ]]; then
-    find "$target_skills_dir" -mindepth 1 -maxdepth 1 -name 'zoo-*' -exec rm -rf {} +
+    for name in "${managed_skill_names[@]}"; do
+      rm -rf "$target_skills_dir/$name"
+    done
+    for prefix in "${managed_skill_prefixes[@]}"; do
+      find "$target_skills_dir" -mindepth 1 -maxdepth 1 -name "$prefix-*" -exec rm -rf {} +
+    done
   fi
 
   if [[ -d "$source_skills_dir" ]]; then
     mkdir -p "$target_skills_dir"
+    for name in "${managed_skill_names[@]}"; do
+      if [[ -e "$source_skills_dir/$name" ]]; then
+        cp -R "$source_skills_dir/$name" "$target_skills_dir/"
+      fi
+    done
     shopt -s nullglob
-    for skill in "$source_skills_dir"/zoo-*; do
-      cp -R "$skill" "$target_skills_dir/"
+    for prefix in "${managed_skill_prefixes[@]}"; do
+      for skill in "$source_skills_dir"/"$prefix"-*; do
+        cp -R "$skill" "$target_skills_dir/"
+      done
     done
     shopt -u nullglob
   fi
@@ -109,7 +126,7 @@ if [[ "$update_codex" == true ]]; then
   ensure_distinct_dirs "$source_codex_abs" "$target_codex_abs" ".codex"
 
   sync_optional_dir "$source_codex_abs/agents" "$target_codex_abs/agents"
-  sync_optional_zoo_skills "$source_codex_abs/skills" "$target_codex_abs/skills"
+  sync_optional_project_skills "$source_codex_abs/skills" "$target_codex_abs/skills"
 fi
 
 if [[ "$update_claude" == true ]]; then
@@ -122,7 +139,7 @@ if [[ "$update_claude" == true ]]; then
 
   sync_optional_dir "$source_claude_abs/agents" "$target_claude_abs/agents"
   sync_optional_dir "$source_claude_abs/commands" "$target_claude_abs/commands"
-  sync_optional_zoo_skills "$source_claude_abs/skills" "$target_claude_abs/skills"
+  sync_optional_project_skills "$source_claude_abs/skills" "$target_claude_abs/skills"
 fi
 
 if [[ "$update_zoo" == true ]]; then

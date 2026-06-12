@@ -41,6 +41,8 @@ Ignored task-root files are workspace-only artifacts, not commit material. If a 
    - Focus screenshots on the changed UI, not unrelated page chrome.
    - In Codex, embed local screenshots with absolute-path Markdown image tags. In Claude Code, use its supported image/file presentation; if inline display is unavailable, include the evidence paths and what each screenshot proves.
    - If screenshots cannot be produced, explain why and what evidence is available instead.
+9. Add 'How it works' section. Write a detailed explanation for the developer USER how the implementation works, so that user understands nuts and bolts inside. This must go top-down, and explain conceptual changes, data flows, code flows, edge cases, domain model, synthetic objects and abstractions invented, and which existing abstractions have been extended and why. This must be skimmable, easy to read, starting with very high level and going to interim and lower level details. Where appropriate and if recorded, this includes the decisions made and their rationale. Highlight and call out anything that's controversial, counter-intuitive or untypical in our codebase.
+
 
 ## Output Shape
 
@@ -54,5 +56,24 @@ Keep the report brief but comprehensive. Prefer this order:
 6. Commits
 7. Remaining work
 8. Screenshots, when applicable
+9. How it works
 
 Do not paste raw reports, long diffs, or full test logs. Do not invent commits, validation, screenshots, or remaining work. If the source of truth is unclear, state the uncertainty plainly.
+
+## Example of 'How it works'
+
+Keep simple for a small change. Feel free to group this into subsections for larger changes.
+
+```
+1. Frubernation happens during redemption, right after generating the discount code.
+
+2. The result of a successful frubernation is stored in logical coupon details, next to physical coupons.
+
+3. Frubernation can fail. A failure **does NOT cause entire redemption to fail**, because it's too late to cancel the code at that time. Instead, we schedule a retry job that will make 5 more attempts to frubernate. This introduces a weird flow that's unlike anything in the app, but was the only way to handle failures reasonably. We found no ways to rearrange the existing flows around it.
+
+4. Frubernation status holds our internal ID, provider ID, status, and the error returned by provider if any.
+
+5. Frubernation results are returned by the provided asynchronously as a webhook, which is automatically created during SetupShop phase and handled via normal integration webhook routing.
+
+<...lower level details, like package layout, which internal API hooks integration uses, ...>
+```

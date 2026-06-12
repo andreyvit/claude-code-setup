@@ -23,14 +23,18 @@ Prefer a proposal when the task works within an existing scope or common framewo
 
 Do not classify solely by how many files the immediate edit touches. A local refactor can still be proposal-worthy when it creates a special cleaner shape for one call site while the rest of the system keeps using the old shared pattern. Keep local changes simple and consistent with nearby code, then propose the global refactor that would make the better pattern available everywhere.
 
+Keep the direct user ask on the primary implementation path. Significant scope expansion requires a proposal and explicit user approval before implementation, even when it seems like a good idea. Significant expansion includes new jobs, persisted state or migrations, new settings, public/API contract changes, broad subsystem behavior changes, operational dashboards/recovery mechanisms, and other work a user would not naturally expect from the direct ask. Write the proposal first; if the expansion blocks the direct ask, ask the user through the user-interview or Ask User path to approve it, and if it does not block, leave the proposal deferred so the user can approve or request it later.
+
+More subtasks is better than fewer when each slice is reviewable and testable. Treat separate subtasks like reviewable commits or small PRs: if a larger set of changes could plausibly stand alone and has observable testable output, prefer separate-subtask routing over a broad active-task diff.
+
 Before scoping complex changes into the active task, ask:
 
-- Were these complex changes explicitly requested?
+- Were these complex changes explicitly requested or approved?
 - Would the user naturally expect them, or would the expansion be surprising?
 - Is there one reasonable implementation path, or several plausible approaches needing a decision?
 - Can a useful version of the requested task ship without them, or are they technically blocking progress?
 
-If the changes are explicitly requested, natural, or technically blocking with one reasonable path, include them in scope as current-task work or a separate subtask. If they are surprising, non-blocking, or have multiple plausible approaches, write a proposal instead.
+If the changes are explicitly requested, approved, natural, or technically blocking with one reasonable path, include them in scope as current-task work or a separate subtask. If they are surprising, non-blocking, or have multiple plausible approaches, write a proposal instead.
 
 Do not ignore required changes. When routing to a proposal, explain exactly why the change is desired, what it improves, and what alternatives exist.
 
@@ -43,6 +47,7 @@ Classify the change into exactly one category.
 Use this category for consequential changes that should get human approval before implementation:
 
 - new or materially changed product behavior across a subsystem
+- new jobs, persisted state, migrations, settings, admin/support surfaces, metrics, dashboards, recovery, rollback, or operational mechanisms
 - new security, rate limiting, permission, privacy, deployment, scalability, storage, upload, rendering, streaming, API, or rollout mechanism
 - changes that alter how future code should be written in a broad area
 - architecture or layering changes with meaningful consequences

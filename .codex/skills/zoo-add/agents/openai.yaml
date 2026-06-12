@@ -1,0 +1,6 @@
+interface:
+  display_name: "Zoo Add"
+  short_description: "Record deferred Zoo feedback"
+  default_prompt: "Use $zoo-add to record this feedback for after the current Zoo subtask."
+policy:
+  allow_implicit_invocation: false

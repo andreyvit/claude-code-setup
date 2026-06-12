@@ -1,7 +1,7 @@
 ## App Harness
 
 - Prefer agent mode for localhost browser work: `go run ./cmd/fireback -agent -fresh <scenario>`.
-- Common default scenario: `base`; current production-like scenarios are listed in `_readme/development.md` and registered in `fire/harness/reg-scenarios.go`.
+- Common default scenario: `base`; current production-like scenarios are listed in `_readme/development.md` and registered in `harness/reg-scenarios.go`.
 - Agent mode derives the port from `AGENT_INDEX` or the checkout suffix; base port is `3001`, so checkout `back7` uses `http://localhost:3071/`.
 - Agent mode creates `super@bubblehouse.com` with password `3141Super` and uses tenant slug `harness-main` for `base`.
 - Tunnel mode is plain `go run ./cmd/fireback`; use it only for Shopify App Proxy, OAuth, webhooks, or other externally reachable callbacks.
@@ -20,5 +20,5 @@
 
 ## Production Repro
 
-- Production-like browser scenarios load copied render-test JSON only through `fire/harness/prod_repro.go`, which sanitizes production-only secrets and keeps integration HTTP blocked.
+- Production-like browser scenarios load copied render-test JSON only through `harness/prod_repro.go`, which sanitizes production-only secrets and keeps integration HTTP blocked.
 - Do not clone integration settings into ordinary local or automated-test setup.

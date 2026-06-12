@@ -1,6 +1,6 @@
 ---
 name: zoo-init
-description: Research a repository and initialize real project-specific Zoo customization files under .zoo, then verify Bureau MCP access. Use when setting up Zoo workflow customization for a repository.
+description: Research a repository and initialize real project-specific Zoo and Lighto customization files under .zoo, then verify Bureau MCP access. Use when setting up Zoo or Lighto workflow customization for a repository.
 ---
 
 # Zoo Init
@@ -32,12 +32,13 @@ This is required for Default mode to expose `request_user_input` for Zoo user in
 5. Initialize `.zoo/subtask-start.md`, `.zoo/task-finish.md`, and `.zoo/rebase.md` as empty files if missing. These are repo-specific workflow hooks; leave them empty unless repository research or the user supplies concrete instructions.
 6. Initialize `.zoo/push.md` if missing. Leave it empty unless the repository clearly documents a PR, trunk, or other publishing workflow; when it does, summarize only the concrete commands or constraints Zoo Push must follow.
 7. Initialize `.zoo/proposals.md` if missing. If the repository has no existing proposals folder or convention, set new proposals to `.proposals/YYYYMMDD-title.md` and archived proposals to the `archived/` subfolder of that proposals folder.
-8. Populate each new role-specific file with concise, real project-specific instructions discovered from the repository. Do not use placeholder boilerplate. Format: concise bullet point list, short and actionable, no fluff.
-9. For missing `.zoo/review/*.md` files, start from the user-provided review seed content below, follow the review-file shape below, and adapt it based on the research results: name project-specific risks, source-of-truth docs, commands, production constraints, security boundaries, test patterns, and known failure modes.
-10. If a role or review theme has little explicit guidance, infer the repo's spirit from its structure, docs, commands, and examples, then write 1-2 suitable low-risk instructions for that file.
-11. Keep each file short: include only guidance that a generic Zoo workflow would not already know.
-12. After file setup, call `mcp__bureau__current_task` to verify Bureau MCP is accessible. Do not create or switch Bureau tasks for this check.  If Bureau tools are not exposed, use tool discovery to find the Bureau current-task tool, then call it. A normal empty/no-current-task response still counts as Bureau being accessible; a missing tool or failed MCP call does not. If you're sure Bureau is not accessible, recommend ways to install `https://github.com/andreyvit/bureau-mcp` in the current agent.
-13. Report: (1) primary research findings in the repo, (2) status for each dependency (whether Bureau MCP was accessible for now), (3) a table with all .zoo/ files mentioned above, brief description of their role, and the status: created, existing, updated.
+8. Initialize `.zoo/lighto.md` if missing: record the repo's ticket tooling commands, the Tier-0 scripted check command when the repo has one, and file-location overrides only when they differ from the Lighto defaults (`.spec/` task files, `.tasks/` research and evidence). Omit entries with nothing concrete; an empty file is fine.
+9. Populate each new role-specific file with concise, real project-specific instructions discovered from the repository. Do not use placeholder boilerplate. Format: concise bullet point list, short and actionable, no fluff.
+10. For missing `.zoo/review/*.md` files, start from the user-provided review seed content below, follow the review-file shape below, and adapt it based on the research results: name project-specific risks, source-of-truth docs, commands, production constraints, security boundaries, test patterns, and known failure modes.
+11. If a role or review theme has little explicit guidance, infer the repo's spirit from its structure, docs, commands, and examples, then write 1-2 suitable low-risk instructions for that file.
+12. Keep each file short: include only guidance that a generic Zoo workflow would not already know.
+13. After file setup, call `mcp__bureau__current_task` to verify Bureau MCP is accessible. Do not create or switch Bureau tasks for this check.  If Bureau tools are not exposed, use tool discovery to find the Bureau current-task tool, then call it. A normal empty/no-current-task response still counts as Bureau being accessible; a missing tool or failed MCP call does not. If you're sure Bureau is not accessible, recommend ways to install `https://github.com/andreyvit/bureau-mcp` in the current agent.
+14. Report: (1) primary research findings in the repo, (2) status for each dependency (whether Bureau MCP was accessible for now), (3) a table with all .zoo/ files mentioned above, brief description of their role, and the status: created, existing, updated.
 
 
 ## Files
@@ -55,6 +56,7 @@ This is required for Default mode to expose `request_user_input` for Zoo user in
 - `.zoo/rebase.md`: optional repo-specific rebase and post-rebase validation instructions for `zoo-rebase`.
 - `.zoo/push.md`: optional repo-specific publish instructions for `zoo-push`, such as push, PR, or trunk workflow.
 - `.zoo/proposals.md`: proposal folder, new proposal naming scheme, archive location, status values, and project-specific proposal rules.
+- `.zoo/lighto.md`: general Lighto overrides read by every Lighto skill: ticket tooling commands, the Tier-0 scripted check command, and non-default file locations. Lighto also reads `.zoo/planning.md`, `.zoo/planreview.md`, `.zoo/coding.md`, `.zoo/testing.md`, `.zoo/browser.md`, `.zoo/subtask-start.md`, and `.zoo/task-finish.md`; it does not read `.zoo/codereview.md`.
 
 ## Uberreview Seed Files
 

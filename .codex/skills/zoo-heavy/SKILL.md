@@ -185,6 +185,10 @@ Planning principles:
 - Keep exactly one active execution target while the task is in progress: `(next)`.
 - Each completed subtask must keep the system shippable and tested; browser-impact work must include browser verification.
 - Prefer smaller subtasks. Split a standalone functional slice into its own subtask when it either provides independent user value or has complex implementation that can be tested on its own; avoid splitting purely by file/layer when the slice cannot be validated independently.
+- More subtasks is better than fewer when the slices are reviewable and testable. Treat each subtask as roughly one reasonable reviewable commit or small PR: if work is expected to touch a larger set of things, could plausibly stand on its own, and has observable testable output, make it its own subtask.
+- The primary implementation path must answer the user's direct ask first. Do not bury the requested outcome inside broader discovered work unless that broader work is technically required for the direct ask.
+- Significant scope expansion requires explicit user approval before implementation. Significant expansion includes new jobs, persisted state or migrations, new settings, public/API contract changes, broad subsystem behavior changes, operational dashboards/recovery mechanisms, and other work a user would not naturally expect from the direct ask.
+- Significant scope expansion goes through the proposal system first. If it technically blocks the direct ask, write the proposal, then use the user-interview or Ask User path to approve the expansion before implementation. If it does not block the direct ask, leave the proposal recorded in `Refactorings` and continue the primary scope; the user can approve or request that work later.
 - Zoo Heavy is not a waterfall. Plan the active `(next)` subtask deeply; future subtasks may include lightweight draft plans or current-best-guess notes, but avoid spending much time on details before promotion.
 - Use what was learned in completed subtasks, reports, tests, browser verification, and code review to re-plan the next subtask and adjust future subtask drafts before promoting them.
 - Future subtasks are scope boundaries and hypotheses; any tactical notes on them are provisional drafts.
@@ -417,6 +421,7 @@ Section guidance:
   - plan only the active `(next)` subtask in detail
   - split standalone functional slices into separate subtasks when they have independent user value or complex independently testable implementation
   - prefer smaller subtasks; avoid broad catch-all subtasks that combine multiple independently valuable or independently testable slices
+  - treat a subtask as roughly one reviewable commit or small PR; when a larger set of files or behaviors can produce its own observable testable output, split it
   - future subtask plans may include brief draft notes, but do not over-invest before promotion
   - primary line contains only status and title
   - `(next)` includes indented `Acceptance:`, `Browser impact:`, `Plan:`, and `Evidence:` lines

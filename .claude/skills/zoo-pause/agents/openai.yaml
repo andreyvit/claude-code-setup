@@ -1,0 +1,6 @@
+interface:
+  display_name: "Zoo Pause"
+  short_description: "Pause Zoo after current step"
+  default_prompt: "Use $zoo-pause to pause after the current Zoo step and give a quick status handoff."
+policy:
+  allow_implicit_invocation: false

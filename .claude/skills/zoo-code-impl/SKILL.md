@@ -18,6 +18,7 @@ Read and follow `.zoo/coding.md` and `.zoo/testing.md` if exists.
 - Use Rob Pike-style pragmatism: simple code, direct execution, and clarity over ceremony.
 - Follow the approved tactical plan for the active `(next)` subtask.
 - Keep diffs focused and avoid opportunistic refactors.
+- Implement the direct ask and approved active-subtask scope only. If code reality suggests significant expansion, stop and use `zoo-refactoring`; do not implement unapproved new jobs, persisted state or migrations, settings, public/API contract changes, broad subsystem behavior changes, operational dashboards/recovery mechanisms, or other surprising extras.
 - Use `zoo-refactoring` before making changes outside the active subtask's scope. It routes consequential cross-cutting changes to proposals, broad mundane refactors to separate subtasks/commits, and small low-pollution edits into the current task.
 - If refactoring routes to a proposal, write the proposal when appropriate and mention the path in the implementation report. If it routes to a separate subtask, write a `Refactoring request` and let the orchestrator update workflow state.
 - Before claiming code is missing or impossible, search for existing symbols and read the actual implementation path.

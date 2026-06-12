@@ -7,6 +7,12 @@
 - Client-specific API guides go in `_clientguides/`; never mention source code or internal configuration names.
 - API docs content lives in `apidocs/`; viewer code lives in `apidocviewer/`.
 
+## Update Scope
+
+- For infrastructure, release, harness, workflow, and other core changes, consider every durable place that describes the affected behavior before deciding docs are done: root `README.md`, tracked subfolder `README.md` files, `_readme/`, `_ai/`, `.zoo/*.md`, `AGENTS.md`, relevant `.spec/*.md`, and command help text.
+- Update only files whose current content becomes inaccurate, incomplete, or misleading because of the change. Do not churn broad docs just because a file mentions a nearby concept.
+- Prefer `git ls-files '*README.md'` and targeted `rg` searches over filesystem-wide scans so dependency READMEs and ignored generated docs do not pollute the review.
+
 ## API Docs
 
 - Validate API docs with `make apidocs`; preview with `go run ./cmd/firedocs`.
