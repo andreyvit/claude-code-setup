@@ -1,7 +1,6 @@
 interface:
   display_name: "Zoo Docs"
   short_description: "Update durable Zoo docs"
-  default_prompt: "Use $zoo-docs to update durable docs for completed Zoo workflow work."
+  default_prompt: "Use $zoo-docs to update durable docs for completed Zoo work."
 policy:
   allow_implicit_invocation: false
-

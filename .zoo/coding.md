@@ -57,6 +57,7 @@
 - Do not add hidden extras on `UICtx`, prop-specific callbacks, prop-name string constants, duplicated raw string-key reads, or register-wrapper sentinels to work around settings plumbing.
 - New settings need `TenantSettings`, UI in `fireback/shop-settings-common.go`, and test configuration through `Configure` when needed.
 - Translatable strings live in `fireback/strings.txt`.
+- New customer-visible frontend UI states must be stylable through theme/block settings. New customer-visible strings must be translatable, not hardcoded.
 - Backoffice pages should register through `bonav.Define()`; see `_ai/backoffice.md`.
 - Dropdown, popover, disclosure, and select work should use Tailwind Plus Elements primitives.
 

@@ -23,6 +23,7 @@
 - Schema-backed settings should keep prop initializers direct; if needed, attach UI behavior later with `Prop.SetupUIUpdater(...)`.
 - New settings need `TenantSettings`, UI in `fireback/shop-settings-common.go`, and test configuration through `Configure` when needed.
 - Translatable strings live in `fireback/strings.txt`.
+- Specs for customer-visible frontend UI states must include theme/block styling support; customer-visible strings must be translatable.
 - Backoffice pages should register through `bonav.Define()`; see `_ai/backoffice.md`.
 - Dropdown, popover, disclosure, and select work should use Tailwind Plus Elements primitives.
 - API docs content lives in `apidocs/`; viewer code lives in `apidocviewer/`; validate with `make apidocs`; preview with `go run ./cmd/firedocs`.

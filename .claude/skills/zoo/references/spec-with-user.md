@@ -1,0 +1,7 @@
+- follow `.zoo/planning.md` if exists
+- co-write product spec first, then technical spec
+- before asking, say concrete options, recommendation, consequences in chat
+- ask via AskUserQuestion/similar when available, otherwise chat
+- explain the question and context in detail
+- ask unrelated questions together; for related questions, ask next batch after prior answers
+- fill in Product Spec, High Level Technical Spec, Decisions

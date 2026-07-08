@@ -1,11 +1,7 @@
 ## Required Context and Commands
 
 - Read `_readme/tests-and-helpers.md` before writing or restructuring tests.
-- Use `make quicktest` during development; it runs `go test -vet=off -short ./...`.
-- Use `make uitest` for the Playwright/frontend UI suite. Before final validation, run both `make quicktest` and `make uitest`; they may run in parallel as separate commands or via `make -j2 quicktest uitest`.
-- `make uitest` requires UI dependencies installed once with `cd uitests && npm install`.
-- Never pass `-timeout` to `go test`.
-- Do not use `-count=1` unless running one specific test.
+- Changes to frontend block templates under `fireback/views/blocks/` must have tests covering the changed behavior in each modified block; do not rely on one sibling block's coverage for another modified block.
 - Before commit: `make fmt`, full `go test ./path/to/modified/package/...` without `-short`/`-vet=off`, then `make quicktest` and `make uitest`.
 
 ## Placement

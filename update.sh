@@ -85,8 +85,8 @@ sync_optional_dir() {
 sync_optional_project_skills() {
   local source_skills_dir="$1"
   local target_skills_dir="$2"
-  local managed_skill_names=(lighto)
-  local managed_skill_prefixes=(zoo lighto)
+  local managed_skill_names=(zoo terse linus)
+  local managed_skill_prefixes=(zoo)
   local name
   local prefix
   local skill

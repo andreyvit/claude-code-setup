@@ -1,10 +1,10 @@
 <div align="center">
 
-# Zoo 2 + Lighto
+# Zoo 3
 
 Reliable Codex & Claude workflows for complex projects.
 
-_Specs • Uber-reviews • Browser use • Subtasks_
+_Specs • Tiered reviews • Browser use • Subtasks_
 
 [![License: 0BSD](https://img.shields.io/badge/License-0BSD-blue.svg)](LICENSE)
 
@@ -12,16 +12,16 @@ _Specs • Uber-reviews • Browser use • Subtasks_
 
 Let agents review and fix their own shit before you see it.
 
-1. Uses spec files and per-step report files to avoid forgetting the details.
-2. Runs automatic super-comprehensive reviews of the plan and code.
-3. Splits work into subtasks when possible, then plans and executes each separately.
-4. Verifies UI changes with browser use and screenshots.
-5. Maintains comprehensive documentation.
-6. Follows pragmatic values of Linus Torvalds and Don Melton.
+1. Uses spec files so the task does not evaporate halfway through.
+2. Co-writes spec with user input. User approves before implementation.
+3. Splits work into explicit, reviewable subtasks and commits.
+4. Runs tiered reviews: tests, scripted checks, broad review, visual review.
+5. Verifies UI changes with screenshots.
+6. Writes proposals for refactoring and out-of-scope issues found.
+7. Presents a readable report at the end.
+8. Follows pragmatic values of Linus Torvalds and Don Melton.
 
-Zoo 2 is a set of agents and skills I use in day-to-day production work as a CTO of [Bubblehouse](https://bubblehouse.com/). Lighto is the experimental lightweight sibling: same refusal to ship unreviewed work, much less ceremony.
-
-Lighto is alpha-stage. Expect sharp edges, missing affordances, and changes to the workflow as the experiment settles.
+Zoo 3 is the lightweight successor to Zoo 2, targeting the smarter models of mid-2026.
 
 See my posts for way more context on the idea:
 
@@ -30,109 +30,65 @@ See my posts for way more context on the idea:
 
 These skills are intended to be project-independent, so all customization is via `.zoo/*.md`, for example:
 
+- shared Zoo paths and scripted check commands go into `.zoo/zoo.md`
+- planning and spec-review instructions go into `.zoo/planning.md` and `.zoo/planreview.md`
 - project-specific browser testing instructions go into `.zoo/browser.md`
 - project-specific testing instructions go into `.zoo/testing.md`
-- project-specific uber-review instructions go into `.zoo/review/*.md`
+- project-specific code-review risks go into `.zoo/codereview.md`
 - and more; see [example .zoo files](.zoo/)
 
 These will be generated for your project during the Zoo Init phase of installation.
 
-Tip: if you're choosing between Codex and Claude, choose Codex; it produces *much* better results with Zoo workflows, and the rate limits last *much* longer.
+Tip: if you're choosing between Codex and Claude for Zoo workflows...
+
+- Codex + GPT 5.5 produces *much* better results than Claude Code + Opus 4.8
+- Claude Code + Fable 5 might be on par with Codex + GPT 5.5
+- Codex rate limits last *much* longer
 
 
 ## Quick start
 
 ### Installation
 
-To install, run `./install.sh /path/to/your/project` from this repository, then run Zoo Init from that project and review/customize the generated content under `.zoo/`.
+1. Run `./install.sh /path/to/your/project` from this repository.
+2. Run Zoo Init skill from that project.
+3. Review and customize the generated content under `.zoo/`.
 
 I've published our real-world [`.zoo/*.md`](.zoo/) files, but you definitely should not just blindly copy them.
 
+When installing, we add separate skill copies for Claude and for Codex. You can use symlinks if you prefer, but we avoid them to make handling Windows checkouts easier 🤮
 
-### Simple tasks: Zoo Zero
+### Running a task
 
-Not every task requires a heavy workflow, but almost every task can benefit from the machine reviewing and fixing its own shit before demanding attention from a human. For that, just prefix your instructions with the Zoo Zero skill.
-
-### Most complex tasks: Zoo Heavy
-
-When starting on a big, complex task you care about, run Codex's plan mode asking for a high-level plan, iterate until you're happy with it, then run the Zoo Heavy skill asking it to implement the plan.
-
-If you're feeling lucky or lack human time, simply running Zoo Heavy on a complex task will also produce surprisingly reasonable results. Give it a try, especially overnight.
-
-Often, it's easier to run revision iterations later than to invest in making a plan beforehand. The approach is "I'll know it when I see it", or more like "I'll know it when I see something that's definitely not it".
-
-### Middle ground: Zoo Lite
-
-For a less complex task that Codex would handle okay but not quite right, use Zoo Lite. It will do all planning and implementation work at the top level, just like Codex normally does (and thus at the same speed), but will still benefit from a spec, split into subtasks, and run review loops, which greatly improves the result.
-
-### Lightweight experiment: Lighto
-
-Lighto is an alpha workflow for the annoying middle: tasks that deserve specs, tests, review, and committed evidence, but should not take 1-1.5 hours of full Zoo machinery.
-
-The experiment is based on a few bets:
-
-- keep specs and reviews; skipping them just moves the review work back to the human
-- split work into explicit, smaller subtasks so each commit is easier to reason about
-- use fast, narrow review checks first, then broader agentic review only where it earns its keep
-- keep project-specific guidance in skills, `.zoo/*.md`, per-folder instructions, and `.lighto/checks/*.md`, loaded when relevant instead of front-loading everything
-- vary model/thinking level by review tier instead of assuming every step needs the most expensive setting
-- ask product-level questions earlier, when a short human answer can avoid long revision loops later
-- bring back a little more of the Zoo 1 attitude: blunt, specific, and allergic to hand-wavy "it passes" nonsense
-
-Current Lighto pieces:
-
-- `lighto-spec-review` reviews and tightens a task file before implementation.
-- `lighto-subtask` executes exactly one subtask from a `.spec/YYYYMMDD-<task>.md` file.
-- `lighto-code-review` runs the tiered review gate: scripted checks, narrow `.lighto/checks/*.md` checks, then broad review lenses.
-- `lighto-closeout` performs final validation, report cleanup, and rebase handling.
-- `.zoo/lighto.md` holds repo-specific Lighto configuration such as ticket commands, Tier-0 checks, and file-location overrides.
-
-For now, do not treat Lighto as a polished replacement for Zoo Heavy/Lite/Zero. Treat it as an alpha workflow to try on real tasks, measure honestly, and revise.
-
+1. Say `<task> with /zoo` or just `/zoo <task>`.
+2. Answer questions, wait until spec is ready
+3. Review spec, iterate if needed
+4. Say `Approved`, or, better yet, `/goal Approved. Execute until done.` (Codex) or `/loop Approved. Execute until done.` (Claude)
 
 ### Tips for reviewing the work
 
-At the end of a task, you should get a comprehensive high-level report, including screenshots of any UI changes.
+When task ends, you will get a comprehensive report including screenshots of UI changes. See the spec file for more details; it is the best place to start your review.
 
-When using Zoo Heavy and Zoo Lite, you'll find the spec file to be a useful input when reviewing the results or ongoing work. In particular, it has a decision log for all choices made by the LLM, and detailed acceptance criteria for the substeps that you should see materialized as commits in your repository. The file should be under `.tasks/YYYYMMDD-whatever/spec.md`, although you can provide your own location for it.
-
-Zoo Heavy and Zoo Lite will produce a separate commit for each subtask, to make reviewing work easier. You might want to squash those after the review.
+Zoo 3 will produce small, separate commits for subtasks when practical. You probably want to squash those after review.
 
 
 ### Asking for revisions
 
-To request a revision, run a Zoo skill again. It should recognize that it's a revision and continue working with the same spec and same task directory.
+To request a revision, run a Zoo skill again (`/zoo <revision request>`). It should recognize that it's a revision and continue working with the same spec and same task directory.
+
+To add an unrelated revision while a task is running, use Zoo Add skill (`/zoo-add <revision request>`), which will record the request for the future without the agent dropping everything and switching to it.
 
 
 ## Advanced use
 
-### Zoo Docs and Zoo HR
-
-You can invoke Zoo Docs separately to beat some new knowledge into its stupid brain.
-
-To update Zoo skills or instructions under `.zoo`, invoke the Zoo HR skill.
-
-This replaces the `/hr` command from Zoo 1.
-
-### Zoo Uber Review
-
-Uber reviews run after a regular review passes, and invoke multiple reviewer subagents, one for each `.zoo/review/*.md` file. This dramatically increases the quality of the review.
-
-You can invoke the Zoo Uber Review skill separately, similar to a native `/review` command. It won't start a review-and-fix loop, however; for that, simply invoke Zoo Zero.
-
-### Zoo Rebase
-
-New in Zoo 2.3, after finishing, Zoo workflows will execute Zoo rebase, which will pull and rebase on top of latest code, resolve conflicts, and rerun tests if anything might have changed.
-
-### Zoo Push
-
-New in Zoo 2.3, you can manually run Zoo Push skill which runs Zoo Rebase and pushes changes after, repeating rebase until successful.
-
-### Zoo Ensure Safe Deploy
-
-New in Zoo 2.3, if you have tokens to spare, run Zoo Ensure Safe Deploy inside `/goal` (Codex) or `/loop` (Claude) to have the model do its very best to find any obstacles to safe deployment.
-
-You can specify the changes to review (e.g. “since v1.2.3”). By default, it will focus on unpushed commits.
+* Zoo Docs: invoke manually to beat some new knowledge into stupid machine brain
+* Zoo HR: update skills and customize Zoo workflows (instructions under `.zoo`)
+* Zoo Cleanup Finished Specs: archive completed `.spec/*.md` files and resolved proposal files without deleting them
+* Zoo Rebase: `git pull --rebase`, resolve conflicts, retest; runs automatically at the end of each task
+* Zoo Push: Zoo Rebase then `git push` if safe
+* Zoo Ensure Safe Deploy: waste some extra tokens finding potential deployment problems
+* Zoo Code Review: can invoke manually and specify the changes to review (“since v1.2.3”)
+* Zoo Proposal: ask to write a proposal
 
 ### Proposals
 
@@ -142,48 +98,16 @@ This is a way to keep security/modularity/etc reviews satisfied without blowing 
 
 Review these proposals occasionally, and see if you wanna execute them.
 
-There's Zoo Proposal skill if you want to initiate a proposal manually.
-
-
-## Installation instructions for agents
-
-1. Run `./install.sh /path/to/your/project` from this repository. It installs the local `.codex` and `.claude` skills/subagents, including `zoo-*`, `lighto`, and `lighto-*` skills when present, without touching `.zoo`.
-2. Install [Bureau MCP](https://github.com/andreyvit/bureau-mcp) -- use command `npx` with args `-y` and `bureau-mcp` if configuring via Codex app settings UI.
-3. Run Zoo Init skill to verify setup, research the repo and create an initial set of project-specific instruction files under `.zoo/`, including `.zoo/lighto.md` for Lighto overrides.
-
-
-## Handling of Claude and Codex differences
-
-We make sure Claude and Codex workflow skills are byte-by-byte identical where possible; makes customizing them easier.
-
-When installing, we do add separate copies for Claude and for Codex. You can use symlinks if you prefer, but we avoid them to make handling Windows checkouts easier 🤮
-
-Subagent definitions are materially different, though; we keep them short to simplify maintenance.
-
 
 ## Changelog
 
-* Lighto alpha adds a lightweight spec/subtask/review workflow alongside Zoo.
+* Zoo 3 replaces Zoo Heavy/Lite/Zero with a single lighter workflow, introduces tiered reviews, drop bureau reports (for big token savings), and all steps share a single research file
 * Zoo 2.3 adds Claude Code, proposals, final reports (Zoo Report skill invoked automatically when finishing tasks), Zoo Rebase, Zoo Push, and Zoo Ensure Safe Deploy skill (for manual invocation under `/goal` or `/loop`)
 * Zoo 2.2 adds Uber Review to all Zoo flows.
 * Zoo 2.1 refines Codex setup for GPT 5.5-xhigh, adds Zoo Lite and Zoo Zero workflows to reflect the preferred speed/accuracy balance of the smarter models, and is the first public release of Zoo 2.
 * Zoo 2.0 is a reimagining of Zoo for Codex and the smarter GPT 5.4+ models. Introduces a spec file.
 * Zoo 1.1 adds Bureau MCP for more consistent reporting.
 * Zoo 1.0 is a Claude Code setup described in my blog post.
-
-
-## Zoo 1 for Claude
-
-Under `.claude-zoo-v1`, I still have Zoo 1 subagents and commands, basically the exact workflow described in [All Star Zoo](https://tarantsov.com/all-star-zoo/).
-
-This is superseded by Zoo v2, but some might still prefer Zoo 1.
-
-To install:
-
-1. Copy `.claude-zoo-v1/agents` and `.claude-zoo-v1/commands` into your project's `.claude` directory.
-2. Globally search and replace `_ai` with the directory you'd like to use for the AI knowledge base.
-3. Globally search and replace `CLAUDE.md` with the file you use as the primary source of instructions.
-4. Ask HR agent to adapt agent definitions to your tech stack.
 
 
 ## License

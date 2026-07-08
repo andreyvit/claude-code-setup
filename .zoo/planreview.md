@@ -9,6 +9,7 @@
 ## Repo-Specific Plan Checks
 
 - Settings changes should cover `TenantSettings`, runtime/default behavior, UI in `fireback/shop-settings-common.go` or schema props, translations in `fireback/strings.txt` when relevant, and test configuration through `Configure`.
+- Customer-visible frontend UI state changes should expose theme/block styling controls and translatable customer-visible strings.
 - Schema-backed settings props should stay as direct `mconf.NewProp(...)` initializers where possible; init-cycle fixes should use narrow setters like `Prop.SetupUIUpdater(...)`.
 - Backoffice plans should mention `bonav.Define()` route/nav registration or document why direct route registration is needed.
 - Tests should read `_readme/tests-and-helpers.md`, live beside the relevant package, and reserve `fire/integrationtests/` for full-stack HTTP handler cross-feature tests.
