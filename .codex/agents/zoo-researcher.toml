@@ -1,5 +1,6 @@
 name = "zoo-researcher"
 description = "Researches the codebase and distills findings into a Zoo research file. Use only as part of the Zoo workflow."
+model = "gpt-5.6-terra"
 model_reasoning_effort = "high"
 
 developer_instructions = """

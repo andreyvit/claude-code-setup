@@ -26,6 +26,9 @@ if [[ "$source_abs" == "$target_abs" ]]; then
   exit 1
 fi
 
+managed_skill_names=(zoo terse linus)
+managed_skill_prefixes=(zoo)
+
 copy_named_children() {
   local source_dir="$1"
   local target_dir="$2"
@@ -49,12 +52,28 @@ copy_named_children() {
   shopt -u nullglob
 }
 
+remove_managed_skills() {
+  local target_dir="$1"
+  local name
+  local prefix
+
+  if [[ ! -d "$target_dir" ]]; then
+    return 0
+  fi
+
+  for name in "${managed_skill_names[@]}"; do
+    rm -rf "$target_dir/$name"
+  done
+
+  for prefix in "${managed_skill_prefixes[@]}"; do
+    find "$target_dir" -mindepth 1 -maxdepth 1 -name "$prefix-*" -exec rm -rf {} +
+  done
+}
+
 copy_managed_skills() {
   local source_dir="$1"
   local target_dir="$2"
   local label="$3"
-  local managed_skill_names=(zoo terse linus)
-  local managed_skill_prefixes=(zoo)
   local name
   local prefix
   local skill
@@ -65,14 +84,7 @@ copy_managed_skills() {
   fi
 
   mkdir -p "$target_dir"
-
-  for name in "${managed_skill_names[@]}"; do
-    rm -rf "$target_dir/$name"
-  done
-
-  for prefix in "${managed_skill_prefixes[@]}"; do
-    find "$target_dir" -mindepth 1 -maxdepth 1 -name "$prefix-*" -exec rm -rf {} +
-  done
+  remove_managed_skills "$target_dir"
 
   for name in "${managed_skill_names[@]}"; do
     if [[ -e "$source_dir/$name" ]]; then
@@ -91,7 +103,8 @@ copy_managed_skills() {
   shopt -u nullglob
 }
 
-copy_managed_skills "$source_abs/.codex/skills" "$target_abs/.codex/skills" ".codex skills"
+copy_managed_skills "$source_abs/.agents/skills" "$target_abs/.agents/skills" ".agents skills"
+remove_managed_skills "$target_abs/.codex/skills"
 copy_named_children "$source_abs/.codex/agents" "$target_abs/.codex/agents" ".codex agents"
 copy_managed_skills "$source_abs/.claude/skills" "$target_abs/.claude/skills" ".claude skills"
 copy_named_children "$source_abs/.claude/agents" "$target_abs/.claude/agents" ".claude agents"

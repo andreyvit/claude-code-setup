@@ -1,34 +1,44 @@
 <div align="center">
 
-# Zoo 3
+# Zoo 3.1
 
-Reliable Codex & Claude workflows for complex projects.
+Reliable Codex, Claude & Grok workflows for complex projects.
 
-_Specs • Tiered reviews • Browser use • Subtasks_
+_Specs • Uber-reviews • Staged planning • Browser use • Subtasks_
 
 [![License: 0BSD](https://img.shields.io/badge/License-0BSD-blue.svg)](LICENSE)
 
 </div>
 
-Let agents review and fix their own shit before you see it.
+Let agents review and fix their shit before you have to deal with it.
 
-1. Uses spec files so the task does not evaporate halfway through.
-2. Co-writes spec with user input. User approves before implementation.
-3. Splits work into explicit, reviewable subtasks and commits.
-4. Runs tiered reviews: tests, scripted checks, broad review, visual review.
-5. Verifies UI changes with screenshots.
-6. Writes proposals for refactoring and out-of-scope issues found.
+Workflow:
+
+1. High-level spec (+ review)
+2. Low-level spec (+ review)
+3. Implementation (per-subtask commits, screenshots and tiered reviews)
+4. User requests revisions and decides on pending suggestions
+
+Features:
+
+1. Spec format optimized for quick human review.
+2. Cross-agent spec uber-reviews — use diverse intelligence at a low token cost.
+3. Explicit subtasks result in reviewable commits with clear justifications.
+4. Tiered code reviews: tests, scripted checks, broad review, visual review.
+5. Screenshots for any UI changes.
+6. Parks extra discoveries as Pending suggestions (for later user approval) instead of hijacking the current commit; writes proposals for later/out-of-scope work.
 7. Presents a readable report at the end.
-8. Follows pragmatic values of Linus Torvalds and Don Melton.
+8. Uses a research file to save tokens on re-researching the codebase.
+9. Follows pragmatic values of Linus Torvalds and Don Melton.
 
-Zoo 3 is the lightweight successor to Zoo 2, targeting the smarter models of mid-2026.
+Zoo 3.1 is the current version of Zoo 3, the lightweight successor to Zoo 2 targeting the smarter models of mid-2026. See my posts for way more context on the idea:
 
-See my posts for way more context on the idea:
-
+* [Zoo 3.1 fights scope creep and runs on Grok](https://tarantsov.com/zoo-3-1/)
+* [Zoo 3, lean and mean](https://tarantsov.com/zoo-3/)
 * [Meet Zoo 2](https://tarantsov.com/meet-zoo-2/)
 * [All Star Zoo](https://tarantsov.com/all-star-zoo/)
 
-These skills are intended to be project-independent, so all customization is via `.zoo/*.md`, for example:
+Zoo skills are project-independent, customization is via `.zoo/*.md`:
 
 - shared Zoo paths and scripted check commands go into `.zoo/zoo.md`
 - planning and spec-review instructions go into `.zoo/planning.md` and `.zoo/planreview.md`
@@ -39,11 +49,13 @@ These skills are intended to be project-independent, so all customization is via
 
 These will be generated for your project during the Zoo Init phase of installation.
 
-Tip: if you're choosing between Codex and Claude for Zoo workflows...
 
-- Codex + GPT 5.5 produces *much* better results than Claude Code + Opus 4.8
-- Claude Code + Fable 5 might be on par with Codex + GPT 5.5
-- Codex rate limits last *much* longer
+## If you're picking an agent for Zoo workflows...
+
+1. Hot take: Grok produces the best results by far. Reasonable, down to earth specs, no-drama implementation, just as good at browser use, and SuperGrok Heavy lasts for an entire week of heavy usage (whereas I had to previously juggle three max Codex accounts).
+2. Claude Code + Fable 5 writes decent specs (probably best at actually planning, with slight edge over Grok, but the resulting spec is a bit less readable than Grok's and more overengineered). Good at implementation too, but if you do everything with Fable, those weekly limits on the highest plan barely last a day.
+3. Codex + GPT 5.6 Sol is great at implementation, but outputs specs written in lunacy English. Codex rate limits last *much* longer than Claude's. (But you know what lasts even longer? Grok.)
+4. I haven't tried Opus 5 or 4.8 much. Opus 4.6 was much worse than Codex in my experience.
 
 
 ## Quick start
@@ -56,43 +68,58 @@ Tip: if you're choosing between Codex and Claude for Zoo workflows...
 
 I've published our real-world [`.zoo/*.md`](.zoo/) files, but you definitely should not just blindly copy them.
 
-When installing, we add separate skill copies for Claude and for Codex. You can use symlinks if you prefer, but we avoid them to make handling Windows checkouts easier 🤮
+When installing, we add separate skill copies for Claude (`.claude/skills`) and for Codex (`.agents/skills`). You can use symlinks if you prefer, but we avoid them to make handling Windows checkouts easier 🤮
 
 ### Running a task
 
-1. Say `<task> with /zoo` or just `/zoo <task>`.
-2. Answer questions, wait until spec is ready
-3. Review spec, iterate if needed
-4. Say `Approved`, or, better yet, `/goal Approved. Execute until done.` (Codex) or `/loop Approved. Execute until done.` (Claude)
+1. **You:** Say `<task> with /zoo` or `<task>, do with Zoo`, or just `/zoo <task>`. For a bug fix, say `Investigate <problem> with Zoo`; “investigate” makes Zoo explore the problem deeply and not assume that a code fix is necessarily the right solution.
+2. Agent records user request and researches the codebase first.
+3. Agent writes a high-level spec, asking user where necessary.
+4. **You:** For a complex or high-stakes feature, if you have multiple agents configured, run `/zoo-spec-uberreview` to get every agent to chime in.
+5. **You:** Review and approve the high-level spec.
+6. Agent expands spec with lower-level details like naming, error handling, per-package change summaries, subtask split, letting you review the small details.
+7. **You:** Review and approve the full spec — say `Go` or `Approved`, or even `/loop Go. Execute until done or approval needed. Use zoo skill.`
+8. Agent executes each subtask and commits changes after.
+9. Agent collects mid-task extras (scope expansions, extra code changes, unrelated bugs) under **Pending suggestions**.
+10. After task is complete, agent presents a report. If pending suggestions exist, asks user to approve or reject them.
+11. **You:** Review the resulting code, approve/reject/clarify suggestions, request revisions.
+12. Agent executes revisions as separate subtasks, and presents a report again.
+13. **You:** When satisfied, run `/zoo-squash` to prepare the patchset for pushing. This gives you options to squash all, only squash rework commits, or just tidy up the commit messages.
+14. **You:** Run `/zoo-push` to rebase and push, or just `/zoo-rebase` if in doubt.
+
 
 ### Tips for reviewing the work
 
-When task ends, you will get a comprehensive report including screenshots of UI changes. See the spec file for more details; it is the best place to start your review.
+When the task ends, you get a report with screenshots of UI changes. Start from the spec file: **What happened** (bugs), then **How it works**, then **Report**.
 
-Zoo 3 will produce small, separate commits for subtasks when practical. You probably want to squash those after review.
+Zoo 3.1 produces small, separate commits for subtasks when practical. You probably want to squash those before or after the review (depending on the size of the patchset) via Zoo Squash skill.
 
 
 ### Asking for revisions
 
 To request a revision, run a Zoo skill again (`/zoo <revision request>`). It should recognize that it's a revision and continue working with the same spec and same task directory.
 
-To add an unrelated revision while a task is running, use Zoo Add skill (`/zoo-add <revision request>`), which will record the request for the future without the agent dropping everything and switching to it.
+To add work while a task is running without derailing it, use Zoo Add (`/zoo-add <revision request>`). It records the ask and adds a ready subtask; it does not drop the current one unless the current work is actually harmful.
 
 
 ## Advanced use
 
-* Zoo Docs: invoke manually to beat some new knowledge into stupid machine brain
 * Zoo HR: update skills and customize Zoo workflows (instructions under `.zoo`)
+* Zoo Spec Uberreview: call other installed agents to chime in on the current spec (choose specific agents via prompt, environment variable or instruction files).
+* Zoo Docs: invoke manually to beat some new knowledge into the stupid machine's brain
 * Zoo Cleanup Finished Specs: archive completed `.spec/*.md` files and resolved proposal files without deleting them
+* Zoo Squash: squash and/or tidy up the unpushed commits.
 * Zoo Rebase: `git pull --rebase`, resolve conflicts, retest; runs automatically at the end of each task
-* Zoo Push: Zoo Rebase then `git push` if safe
+* Zoo Push: do Zoo Rebase then `git push` if safe
 * Zoo Ensure Safe Deploy: waste some extra tokens finding potential deployment problems
+* Zoo Upgrade Spec: bring old `.spec/*.md` files to the current task-file format without changing meaning
 * Zoo Code Review: can invoke manually and specify the changes to review (“since v1.2.3”)
-* Zoo Proposal: ask to write a proposal
+* Zoo Spec Review: can invoke manually on a task file
+* Zoo Proposal: ask to write a proposal. “Later” on a Pending suggestion also writes one.
 
 ### Proposals
 
-When Zoo reviewers want to request a refactoring way outside the scope of the current task, they write up a proposal file under `.proposals/` for future consideration.
+When Zoo reviewers want work way outside the current task, or you say “later” on a Pending suggestion, they write a proposal file under `.proposals/` for future consideration.
 
 This is a way to keep security/modularity/etc reviews satisfied without blowing up the scope of simple tasks, but also without ignoring their findings.
 
@@ -101,6 +128,7 @@ Review these proposals occasionally, and see if you wanna execute them.
 
 ## Changelog
 
+* Zoo 3.1 splits planning into high-level and low-level, adds cross-agent spec uberreviews, investigates bugs before planning a fix, queues mid-task discoveries/refactorings/bugs to put a stop to uncontrolled scope expansion, and adds Zoo Squash and Zoo Upgrade Spec skills
 * Zoo 3 replaces Zoo Heavy/Lite/Zero with a single lighter workflow, introduces tiered reviews, drop bureau reports (for big token savings), and all steps share a single research file
 * Zoo 2.3 adds Claude Code, proposals, final reports (Zoo Report skill invoked automatically when finishing tasks), Zoo Rebase, Zoo Push, and Zoo Ensure Safe Deploy skill (for manual invocation under `/goal` or `/loop`)
 * Zoo 2.2 adds Uber Review to all Zoo flows.

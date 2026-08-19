@@ -1,4 +1,0 @@
-- read req and linked tickets
-- pick task file name or use user's
-- init from `references/task-file-template.md`, copy placeholders and subheaders verbatim, keep ALL placeholder instructions for later, but kill <example>s
-- fill in Request

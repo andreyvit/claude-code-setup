@@ -48,11 +48,16 @@ fi
 
 source_codex="$source_repo/.codex"
 source_claude="$source_repo/.claude"
+source_agents="$source_repo/.agents"
 source_zoo="$source_repo/.zoo"
 script_dir="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"
 target_codex="$script_dir/.codex"
 target_claude="$script_dir/.claude"
+target_agents="$script_dir/.agents"
 target_zoo="$script_dir/.zoo"
+
+managed_skill_names=(zoo terse linus)
+managed_skill_prefixes=(zoo)
 
 require_dir() {
   if [[ ! -d "$1" ]]; then
@@ -82,23 +87,31 @@ sync_optional_dir() {
   fi
 }
 
+remove_managed_skills() {
+  local target_skills_dir="$1"
+  local name
+  local prefix
+
+  if [[ ! -d "$target_skills_dir" ]]; then
+    return 0
+  fi
+
+  for name in "${managed_skill_names[@]}"; do
+    rm -rf "$target_skills_dir/$name"
+  done
+  for prefix in "${managed_skill_prefixes[@]}"; do
+    find "$target_skills_dir" -mindepth 1 -maxdepth 1 -name "$prefix-*" -exec rm -rf {} +
+  done
+}
+
 sync_optional_project_skills() {
   local source_skills_dir="$1"
   local target_skills_dir="$2"
-  local managed_skill_names=(zoo terse linus)
-  local managed_skill_prefixes=(zoo)
   local name
   local prefix
   local skill
 
-  if [[ -d "$target_skills_dir" ]]; then
-    for name in "${managed_skill_names[@]}"; do
-      rm -rf "$target_skills_dir/$name"
-    done
-    for prefix in "${managed_skill_prefixes[@]}"; do
-      find "$target_skills_dir" -mindepth 1 -maxdepth 1 -name "$prefix-*" -exec rm -rf {} +
-    done
-  fi
+  remove_managed_skills "$target_skills_dir"
 
   if [[ -d "$source_skills_dir" ]]; then
     mkdir -p "$target_skills_dir"
@@ -119,14 +132,21 @@ sync_optional_project_skills() {
 
 if [[ "$update_codex" == true ]]; then
   require_dir "$source_codex"
+  require_dir "$source_agents/skills"
   mkdir -p "$target_codex"
+  mkdir -p "$target_agents"
 
   source_codex_abs="$(cd -- "$source_codex" && pwd -P)"
   target_codex_abs="$(cd -- "$target_codex" && pwd -P)"
   ensure_distinct_dirs "$source_codex_abs" "$target_codex_abs" ".codex"
 
+  source_agents_abs="$(cd -- "$source_agents" && pwd -P)"
+  target_agents_abs="$(cd -- "$target_agents" && pwd -P)"
+  ensure_distinct_dirs "$source_agents_abs" "$target_agents_abs" ".agents"
+
   sync_optional_dir "$source_codex_abs/agents" "$target_codex_abs/agents"
-  sync_optional_project_skills "$source_codex_abs/skills" "$target_codex_abs/skills"
+  sync_optional_project_skills "$source_agents_abs/skills" "$target_agents_abs/skills"
+  remove_managed_skills "$target_codex_abs/skills"
 fi
 
 if [[ "$update_claude" == true ]]; then
